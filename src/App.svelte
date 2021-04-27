@@ -2,13 +2,9 @@
   let districts = ["05711", "05754", "03459", "03404"];
 
   async function bundesinzidenz() {
-    return fetch("https://api.corona-zahlen.org/germany")
-      .then((response) => response.json())
-      .then((data) => data)
-      .catch((err) => {
-        console.log("API call failed: " + err);
-        errorMessage();
-      });
+    return fetch("https://api.corona-zahlen.org/germany").then((response) =>
+      response.json()
+    );
   }
 
   let incidencePromise = bundesinzidenz();
@@ -16,18 +12,19 @@
   async function getData(code) {
     return fetch("https://api.corona-zahlen.org/districts/" + code)
       .then((response) => response.json())
-      .then((data) => data.data[code])
-      .catch((err) => {
-        console.log("API call failed :" + err);
-        errorMessage();
-      });
+      .then((data) => data.data[code]);
   }
 
   let districtPromise = Promise.all(
     districts.map((district) => getData(district))
   );
 
-  let bothPromises = Promise.all([incidencePromise, districtPromise]);
+  let bothPromises = Promise.all([incidencePromise, districtPromise]).catch(
+    (err) => {
+      console.log("API call failed :" + err);
+      errorMessage();
+    }
+  );
 
   function startTimer(duration, display) {
     let i = duration;
@@ -85,10 +82,10 @@
     </div>
 
     <div class="output">
-      {#each data[1] as entry, i}
+      {#each data[1] as entry, idx}
         <div
           class="outputContainer fade-in"
-          style="animation-delay: {i * 0.2 + 0.2}s"
+          style="animation-delay: {idx * 0.2 + 0.2}s"
         >
           <h3>
             {entry.name}
@@ -104,7 +101,9 @@
                 class="value"
                 style="color: {entry.weekIncidence > data[0].weekIncidence
                   ? 'red'
-                  : 'green'}"
+                  : entry.weekIncidence < data[0].weekIncidence / 2
+                  ? 'green'
+                  : 'black'}"
               >
                 {entry.weekIncidence.toFixed(2)}
               </span>
@@ -126,7 +125,9 @@
       {/each}
     </div>
     <div class="update-hint">
-      Last Update: {data[0].meta.lastUpdate.replace("T", " | ").slice(0, -8)}
+      RKI-Daten Timestamp: {data[0].meta.lastUpdate
+        .replace("T", " | ")
+        .slice(0, -8)}
     </div>
   {/await}
 </main>
@@ -171,11 +172,7 @@
     min-height: 100%;
     padding-top: 20px;
     box-sizing: border-box;
-    background-image: linear-gradient(
-      360deg,
-      rgb(25, 28, 77),
-      #008bcc
-    );
+    background-image: linear-gradient(360deg, rgb(25, 28, 77), #008bcc);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
