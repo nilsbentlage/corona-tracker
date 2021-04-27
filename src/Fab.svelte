@@ -1,6 +1,6 @@
 <script>
   import Menu from "./Menu.svelte";
-  let src = "img/burger.svg";
+  let src = "img/location-svgrepo-com.svg";
 
   let showMenu = false;
 
@@ -63,11 +63,17 @@
     transform: translateX(100px);
   }
   .close-button {
-    background-color: #222;
+    background: #008bcc;
     padding: 4px 64px;
-    display: flex;
+    line-height: 3rem;
     margin: auto;
     text-align: center;
-    color: white
+    color: white;
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    height: 3rem;
+    border-radius: 3rem;
+    transform: translateX(-50%);
   }
 </style>
