@@ -65,7 +65,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
   .delete {
     background-color: red;
