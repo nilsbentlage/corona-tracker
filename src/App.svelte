@@ -1,30 +1,32 @@
 <script>
-  let districts = ["05711", "05754", "03459", "03404"];
+  import Fab from "./Fab.svelte";
 
-  async function bundesinzidenz() {
+  let districts = JSON.parse(localStorage.getItem("districts"));
+  if (!districts) {districts = ["05711", "05754", "03459", "03404"]};
+
+  async function countryIncidence() {
     return fetch("https://api.corona-zahlen.org/germany").then((response) =>
-      response.json()
+      response.json().then((data) => data)
     );
   }
 
-  let incidencePromise = bundesinzidenz();
+  let germanyPromise = countryIncidence();
 
-  async function getData(code) {
-    return fetch("https://api.corona-zahlen.org/districts/" + code)
+  async function districtIncidence() {
+    return fetch("https://api.corona-zahlen.org/districts")
       .then((response) => response.json())
-      .then((data) => data.data[code]);
   }
 
-  let districtPromise = Promise.all(
-    districts.map((district) => getData(district))
-  );
+  let districtPromise = districtIncidence();
 
-  let bothPromises = Promise.all([incidencePromise, districtPromise]).catch(
+  let bothPromises = Promise.all([germanyPromise, districtPromise]).catch(
     (err) => {
       console.log("API call failed :" + err);
       errorMessage();
     }
   );
+
+  districtPromise.then((value) => localStorage.setItem("cache", JSON.stringify(value)));
 
   function startTimer(duration, display) {
     let i = duration;
@@ -48,6 +50,7 @@
 
 <main>
   <div class="bg-image" />
+  <Fab />
   <h1><small>Casumer</small><br />Corona Tracker</h1>
   {#await bothPromises}
     <div class="loading">
@@ -80,18 +83,17 @@
         </div>
       </div>
     </div>
-
     <div class="output">
-      {#each data[1] as entry, idx}
+      {#each districts as district, idx}
         <div
           class="outputContainer fade-in"
           style="animation-delay: {idx * 0.2 + 0.2}s"
         >
           <h3>
-            {entry.name}
-            {#if entry.ags == "03404"}(Stadt){/if}
+            {data[1].data[district].name}
+            {#if data[1].data[district].ags == "03404"}(Stadt){/if}
             <span class="addition">
-              ({entry.population.toLocaleString("de")} Einwohner)
+              ({data[1].data[district].population.toLocaleString("de")} Einwohner)
             </span>
           </h3>
           <div class="display--parent">
@@ -99,26 +101,32 @@
               <div class="title">Inzidenz</div>
               <span
                 class="value"
-                style="color: {entry.weekIncidence > data[0].weekIncidence
+                style="color: {data[1].data[district].weekIncidence >
+                data[0].weekIncidence
                   ? 'red'
-                  : entry.weekIncidence < data[0].weekIncidence / 2
+                  : data[1].data[district].weekIncidence <
+                    data[0].weekIncidence / 2
                   ? 'green'
                   : 'black'}"
               >
-                {entry.weekIncidence.toFixed(2)}
+                {data[1].data[district].weekIncidence.toFixed(2)}
               </span>
             </div>
             <div class="display--child">
               <div class="title">Fälle gesamt</div>
               <span class="value">
-                {entry.cases.toLocaleString("de")}
-              </span><span class="addition">(+{entry.delta.cases}) </span>
+                {data[1].data[district].cases.toLocaleString("de")}
+              </span><span class="addition"
+                >(+{data[1].data[district].delta.cases})
+              </span>
             </div>
             <div class="display--child">
               <div class="title">Tote</div>
               <span class="value">
-                {entry.deaths.toLocaleString("de")}
-              </span><span class="addition">(+{entry.delta.deaths}) </span>
+                {data[1].data[district].deaths.toLocaleString("de")}
+              </span><span class="addition"
+                >(+{data[1].data[district].delta.deaths})
+              </span>
             </div>
           </div>
         </div>
@@ -148,12 +156,11 @@
       transform: translateY(0%);
     }
     to {
-      transform: translateY(-100%);
+      transform: translateY(-110%);
     }
   }
   h1 {
     text-align: center;
-    /* background-color: rgba(255, 255, 255, 0.5); */
     margin: 0;
     padding: 0.5rem 0;
     line-height: 95%;
@@ -177,6 +184,9 @@
     flex-direction: column;
     justify-content: space-around;
     font-weight: 500;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 80px;
   }
   main * {
     z-index: 1;
@@ -259,7 +269,7 @@
     margin: 3rem 0;
   }
   .update-hint {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
