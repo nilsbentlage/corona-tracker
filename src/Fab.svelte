@@ -1,7 +1,7 @@
 <script>
   import Menu from "./Menu.svelte";
   let src = "img/location-svgrepo-com.svg";
-
+  export let data;
   let showMenu = false;
 
   function toggleMenu(event) {
@@ -16,7 +16,7 @@
   <img {src} alt="burger Icon" width="26px" height="26px" />
 </div>
 <div id="overlay" class="center-all {showMenu === true ? 'active' : ''}">
-  <Menu />
+  <Menu {data}/>
   <div class="close-button" on:click={toggleMenu}>CLOSE</div>
 </div>
 

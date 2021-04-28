@@ -1,64 +1,92 @@
 <script>
-  let allDistricts = JSON.parse(localStorage.getItem("cache")).data;
-  let districts = JSON.parse(localStorage.getItem("districts")) || ["05711", "05754", "03459", "03404"];
-  let districtNumbers = {};
+  import { onMount } from "svelte";
 
-  window.onload = function () {
+  export let data;
+  let allDistricts = data[1].data || null;
+  let districts = JSON.parse(localStorage.getItem("districts")) || [
+    "05711",
+    "05754",
+    "03459",
+    "03404",
+  ];
+  let districtNumbers = {};
+  console.log(allDistricts);
+
+  onMount(async () => {
     let target = document.getElementById("districts");
     console.log(target);
     for (const [key, value] of Object.entries(allDistricts)) {
       Object.assign(districtNumbers, { [value.name]: key });
       let option = document.createElement("OPTION");
-      let textNode = document.createTextNode(value.name);
-      option.setAttribute("value", key);
-      option.appendChild(textNode);
+      option.setAttribute("value", value.name);
       document.getElementById("districts").appendChild(option);
     }
     console.log(districtNumbers);
-  };
+  });
 
   function addDistrict() {
     let value = document.getElementById("districtSearch").value;
-    console.log(value);
-    districts.push(value);
-    localStorage.setItem("districts", JSON.stringify(districts));
-    document.getElementById("districtSearch").value = "";
+    if (value in districtNumbers) {
+      console.log(value);
+      districts.push(districtNumbers[value]);
+      localStorage.setItem("districts", JSON.stringify(districts));
+      document.getElementById("districtSearch").value = "";
+      location.reload();
+    } else {
+      document.getElementById("districtSearch").value = "";
+      document.getElementById("districtSearch").placeholder =
+        "Diese Stadt gibt es nicht!";
+    }
+  }
+
+  function resetDistricts() {
+    localStorage.removeItem("districts");
+    location.reload();
   }
 
   function deleteDistrict(event) {
     let arrayKey = event.target.parentNode.dataset.key;
     console.log(arrayKey);
-    districts = districts.filter(x => (x != arrayKey));
+    districts = districts.filter((x) => x != arrayKey);
     localStorage.setItem("districts", JSON.stringify(districts));
+    setTimeout(() => {
+      location.reload();
+    }, 300);
   }
 </script>
 
 <div class="menu">
-  <h2>Welchen Ort möchtest du hinzufügen?</h2>
-  <form>
-    <label for="districtSearch">Landkreis</label>
-    <input
-      type="search"
-      list="districts"
-      id="districtSearch"
-      name="districtSearch"
-    />
-    <datalist id="districts" /><br />
-    <button on:click={addDistrict}>Hinzufügen</button>
-  </form>
-  <div class="districtList">
-    {#each districts as district}
-      <div class="singleDistrict" data-key={district}>
-        <span class="title">{allDistricts[district]?.name}</span><span
-          on:click={deleteDistrict}
-          class="delete">Löschen</span
-        >
-      </div>
-    {/each}
-  </div>
+  {#if districts}
+    <h2>Welchen Ort möchtest du hinzufügen?</h2>
+    <div class="formular">
+      <input
+        list="districts"
+        id="districtSearch"
+        name="districtSearch"
+        placeholder="Gib hier den Namen eines Landkreises ein ..."
+      />
+      <datalist id="districts" /><br />
+      <button on:click={addDistrict}>Hinzufügen</button>
+    </div>
+    <div class="districtList">
+      {#each districts as district}
+        <div class="singleDistrict" data-key={district}>
+          <span class="title">{allDistricts?.[district]?.name}</span><span
+            on:click={deleteDistrict}
+            class="delete">Löschen</span
+          >
+        </div>
+      {/each}
+    </div>
+    <button class="reset" on:click={resetDistricts}>Alle zurücksetzen</button>
+  {/if}
 </div>
 
 <style>
+  .reset {
+    background: grey;
+    margin-top: 3rem;
+  }
   .singleDistrict {
     width: clamp(200px, 80vw, 500px);
     margin: auto;
@@ -86,7 +114,7 @@
     margin: 2rem 0px;
     box-sizing: border-box;
   }
-  form {
+  .formular {
     padding-top: 3rem;
   }
   button {

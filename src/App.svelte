@@ -2,31 +2,33 @@
   import Fab from "./Fab.svelte";
 
   let districts = JSON.parse(localStorage.getItem("districts"));
-  if (!districts) {districts = ["05711", "05754", "03459", "03404"]};
-
-  async function countryIncidence() {
-    return fetch("https://api.corona-zahlen.org/germany").then((response) =>
-      response.json().then((data) => data)
-    );
+  if (!districts) {
+    districts = ["05711", "05754", "03459", "03404"];
   }
 
-  let germanyPromise = countryIncidence();
+  async function countryIncidence() {
+    return fetch("https://api.corona-zahlen.org/germany")
+      .then((response) => response.json().then((data) => data))
+      .catch((err) => {
+        console.log("API call -germany- failed :" + err);
+      });
+  }
 
   async function districtIncidence() {
     return fetch("https://api.corona-zahlen.org/districts")
       .then((response) => response.json())
+      .catch((err) => {
+        console.log("API call -districts- failed :" + err);
+      });
   }
 
-  let districtPromise = districtIncidence();
-
-  let bothPromises = Promise.all([germanyPromise, districtPromise]).catch(
-    (err) => {
-      console.log("API call failed :" + err);
-      errorMessage();
-    }
-  );
-
-  districtPromise.then((value) => localStorage.setItem("cache", JSON.stringify(value)));
+  let bothPromises = Promise.all([
+    countryIncidence(),
+    districtIncidence(),
+  ]).catch((err) => {
+    console.log(err);
+    errorMessage();
+  });
 
   function startTimer(duration, display) {
     let i = duration;
@@ -50,7 +52,6 @@
 
 <main>
   <div class="bg-image" />
-  <Fab />
   <h1><small>Casumer</small><br />Corona Tracker</h1>
   {#await bothPromises}
     <div class="loading">
@@ -62,6 +63,7 @@
       </div>
     </div>
   {:then data}
+    <Fab {data} />
     <div class="outputContainer fade-in">
       <h3>Deutschland</h3>
       <div class="ger--parent">
@@ -279,7 +281,7 @@
     text-align: center;
     padding: 0.3rem;
     animation-name: slideOut;
-    animation-delay: 5s;
+    animation-delay: 10s;
     animation-duration: 1s;
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
