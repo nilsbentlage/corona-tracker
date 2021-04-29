@@ -10,32 +10,39 @@
     "03404",
   ];
   let districtNumbers = {};
-  console.log(allDistricts);
+  let osnaHack = "Osnabrück (Stadt)";
 
   onMount(async () => {
-    let target = document.getElementById("districts");
-    console.log(target);
     for (const [key, value] of Object.entries(allDistricts)) {
+      let newValue = value.name;
+      key == "03404" ? (newValue = osnaHack) : (newValue = value.name);
       Object.assign(districtNumbers, { [value.name]: key });
       let option = document.createElement("OPTION");
-      option.setAttribute("value", value.name);
+      option.setAttribute("value", newValue);
       document.getElementById("districts").appendChild(option);
     }
-    console.log(districtNumbers);
   });
 
   function addDistrict() {
     let value = document.getElementById("districtSearch").value;
+    let placeholder = document.getElementById("districtSearch");
+
+    function searchError(text) {
+      placeholder.value = "";
+      placeholder.placeholder = text;
+    }
     if (value in districtNumbers) {
-      console.log(value);
-      districts.push(districtNumbers[value]);
-      localStorage.setItem("districts", JSON.stringify(districts));
-      document.getElementById("districtSearch").value = "";
-      location.reload();
+      if (districts.includes(districtNumbers[value])) {
+        searchError("Diesem Kreis folgst du bereits!");
+      } else {
+        let pushValue = districtNumbers[value];
+        districts.push(pushValue);
+        localStorage.setItem("districts", JSON.stringify(districts));
+        searchError("Hinzugefügt!");
+        location.reload();
+      }
     } else {
-      document.getElementById("districtSearch").value = "";
-      document.getElementById("districtSearch").placeholder =
-        "Diese Stadt gibt es nicht!";
+      searchError("Diesen Landkreis gibt es nicht!");
     }
   }
 
@@ -46,17 +53,24 @@
 
   function deleteDistrict(event) {
     let arrayKey = event.target.parentNode.dataset.key;
-    console.log(arrayKey);
     districts = districts.filter((x) => x != arrayKey);
     localStorage.setItem("districts", JSON.stringify(districts));
     setTimeout(() => {
       location.reload();
     }, 300);
   }
+
+  function truncateString(str, num) {
+    if (str.length <= num) {
+      return str;
+    }
+    return str.slice(0, num) + " ...";
+  }
+
 </script>
 
 <div class="menu">
-  {#if districts}
+  {#if districts && allDistricts}
     <div class="formular">
       <h2>Welchen Ort möchtest du hinzufügen?</h2>
       <input
@@ -71,10 +85,12 @@
     <div class="districtList">
       {#each districts as district}
         <div class="singleDistrict" data-key={district}>
-          <span class="title">{allDistricts?.[district]?.name}</span><span
-            on:click={deleteDistrict}
-            class="delete">Löschen</span
-          >
+          <span class="title"
+            >{truncateString(
+              district == "03404" ? osnaHack : allDistricts?.[district].name,
+              25
+            )}</span
+          ><span on:click={deleteDistrict} class="delete">Löschen</span>
         </div>
       {/each}
     </div>
@@ -97,6 +113,10 @@
     font-size: 115%;
     font-weight: 400;
   }
+  .districtList {
+    overflow-y: scroll;
+    max-height: 100vh;
+  }
   .delete {
     background-color: red;
     padding: 2px 8px;
@@ -106,18 +126,16 @@
     text-align: left;
   }
   .menu {
-    padding: 1em 0;
+    padding: 1em 0 5em;
     color: white;
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-around;
     align-items: center;
     margin: 2rem 0px;
     box-sizing: border-box;
-  }
-  .formular {
-    padding-top: 3rem;
+    max-height: 100vh;
   }
   button {
     margin-top: 1rem;

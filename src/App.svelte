@@ -5,30 +5,18 @@
   if (!districts) {
     districts = ["05711", "05754", "03459", "03404"];
   }
+  let countryPromise = fetch("https://api.corona-zahlen.org/germany")
+    .then((response) => response.json())
+    .then((data) => data);
 
-  async function countryIncidence() {
-    return fetch("https://api.corona-zahlen.org/germany")
-      .then((response) => response.json().then((data) => data))
-      .catch((err) => {
-        console.log("API call -germany- failed :" + err);
-      });
-  }
-
-  async function districtIncidence() {
-    return fetch("https://api.corona-zahlen.org/districts")
-      .then((response) => response.json())
-      .catch((err) => {
-        console.log("API call -districts- failed :" + err);
-      });
-  }
+  let districtPromise = fetch(
+    "https://api.corona-zahlen.org/districts"
+  ).then((response) => response.json());
 
   let bothPromises = Promise.all([
-    countryIncidence(),
-    districtIncidence(),
-  ]).catch((err) => {
-    console.log(err);
-    errorMessage();
-  });
+    countryPromise,
+    districtPromise,
+  ]).catch((error) => console.log(error));
 
   function startTimer(duration, display) {
     let i = duration;
@@ -44,8 +32,8 @@
   }
 
   function errorMessage() {
-    let timeInSeconds = 40,
-      display = document.querySelector("#time");
+    let timeInSeconds = 20;
+    let display = document.getElementById("time");
     startTimer(timeInSeconds, display);
   }
 </script>
@@ -54,91 +42,97 @@
   <div class="bg-image" />
   <h1><small>Casumer</small><br />Corona Tracker</h1>
   {#await bothPromises}
-    <div class="loading">
-      <div>
-        <h2>Loading</h2>
-        Maybe you have called the API too often!?<br />
-        You have to wait 40 seconds ...
-        <span id="time">40</span>
-      </div>
-    </div>
+    <h2>Loading ...</h2>
   {:then data}
-    <Fab {data} />
-    <div class="outputContainer fade-in">
-      <h3>Deutschland</h3>
-      <div class="ger--parent">
-        <div class="ger--child">
-          <span class="title">Inzidenz:</span>
-          <span class="title">Fälle gesamt:</span>
-          <span class="title">Tote:</span>
-        </div>
-        <div class="ger--child">
-          <span class="value">{data[0].weekIncidence.toFixed(2)}</span><br />
-          <span class="value">{data[0].cases.toLocaleString("de")}</span>
-          <span class="addition">
-            (+{data[0].delta.cases.toLocaleString("de")})</span
-          ><br />
-          <span class="value">{data[0].deaths.toLocaleString("de")}</span>
-          <span class="addition">
-            (+{data[0].delta.deaths.toLocaleString("de")})</span
-          >
-        </div>
-      </div>
-    </div>
-    <div class="output">
-      {#each districts as district, idx}
-        <div
-          class="outputContainer fade-in"
-          style="animation-delay: {idx * 0.2 + 0.2}s"
-        >
-          <h3>
-            {data[1].data[district].name}
-            {#if data[1].data[district].ags == "03404"}(Stadt){/if}
+    {#if !data[0].error && !data[1].error}
+      <Fab {data} />
+      <div class="outputContainer fade-in">
+        <h3>Deutschland</h3>
+        <div class="ger--parent">
+          <div class="ger--child">
+            <span class="title">Inzidenz:</span>
+            <span class="title">Fälle gesamt:</span>
+            <span class="title">Tote:</span>
+          </div>
+          <div class="ger--child">
+            <span class="value">{data[0].weekIncidence.toFixed(2)}</span><br />
+            <span class="value">{data[0].cases.toLocaleString("de")}</span>
             <span class="addition">
-              ({data[1].data[district].population.toLocaleString("de")} Einwohner)
-            </span>
-          </h3>
-          <div class="display--parent">
-            <div class="display--child">
-              <div class="title">Inzidenz</div>
-              <span
-                class="value"
-                style="color: {data[1].data[district].weekIncidence >
-                data[0].weekIncidence
-                  ? 'red'
-                  : data[1].data[district].weekIncidence <
-                    data[0].weekIncidence / 2
-                  ? 'green'
-                  : 'black'}"
-              >
-                {data[1].data[district].weekIncidence.toFixed(2)}
-              </span>
-            </div>
-            <div class="display--child">
-              <div class="title">Fälle gesamt</div>
-              <span class="value">
-                {data[1].data[district].cases.toLocaleString("de")}
-              </span><span class="addition"
-                >(+{data[1].data[district].delta.cases})
-              </span>
-            </div>
-            <div class="display--child">
-              <div class="title">Tote</div>
-              <span class="value">
-                {data[1].data[district].deaths.toLocaleString("de")}
-              </span><span class="addition"
-                >(+{data[1].data[district].delta.deaths})
-              </span>
-            </div>
+              (+{data[0].delta.cases.toLocaleString("de")})</span
+            ><br />
+            <span class="value">{data[0].deaths.toLocaleString("de")}</span>
+            <span class="addition">
+              (+{data[0].delta.deaths.toLocaleString("de")})</span
+            >
           </div>
         </div>
-      {/each}
-    </div>
-    <div class="update-hint">
-      RKI-Daten Timestamp: {data[0].meta.lastUpdate
-        .replace("T", " | ")
-        .slice(0, -8)}
-    </div>
+      </div>
+      <div class="output">
+        {#each districts as district, idx}
+          <div
+            class="outputContainer fade-in"
+            style="animation-delay: {idx * 0.2 + 0.2}s"
+          >
+            <h3>
+              {data[1].data[district].name}
+              {#if data[1].data[district].ags == "03404"}(Stadt){/if}
+              <span class="addition">
+                ({data[1].data[district].population.toLocaleString("de")} Einwohner)
+              </span>
+            </h3>
+            <div class="display--parent">
+              <div class="display--child">
+                <div class="title">Inzidenz</div>
+                <span
+                  class="value"
+                  style="color: {data[1].data[district].weekIncidence >
+                  data[0].weekIncidence
+                    ? 'red'
+                    : data[1].data[district].weekIncidence <
+                      data[0].weekIncidence / 2
+                    ? 'green'
+                    : 'black'}"
+                >
+                  {data[1].data[district].weekIncidence.toFixed(2)}
+                </span>
+              </div>
+              <div class="display--child">
+                <div class="title">Fälle gesamt</div>
+                <span class="value">
+                  {data[1].data[district].cases.toLocaleString("de")}
+                </span><span class="addition"
+                  >(+{data[1].data[district].delta.cases})
+                </span>
+              </div>
+              <div class="display--child">
+                <div class="title">Tote</div>
+                <span class="value">
+                  {data[1].data[district].deaths.toLocaleString("de")}
+                </span><span class="addition"
+                  >(+{data[1].data[district].delta.deaths})
+                </span>
+              </div>
+            </div>
+          </div>
+        {/each}
+      </div>
+      <div class="update-hint">
+        RKI-Daten Timestamp: {data[0].meta.lastUpdate
+          .replace("T", " | ")
+          .slice(0, -8)}
+      </div>
+    {:else}
+      <div class="loading" on:load={errorMessage()}>
+        <div>
+          <h2>Error!</h2>
+          Maybe you have called the API too often!?<br />
+          You have to wait 20 seconds ...
+          <span id="time">20</span>
+        </div>
+      </div>
+    {/if}
+  {:catch error}
+    <div>{error.message}</div>
   {/await}
 </main>
 
@@ -188,7 +182,7 @@
     font-weight: 500;
     overflow: hidden;
     position: relative;
-    padding-bottom: 100px;
+    padding-bottom: 96px;
   }
   main * {
     z-index: 1;
@@ -257,6 +251,8 @@
     justify-content: center;
     align-items: center;
     font-weight: 400;
+    opacity: 0;
+    animation: fadeIn ease-in-out 0.5s forwards;
   }
   .fade-in {
     opacity: 0;

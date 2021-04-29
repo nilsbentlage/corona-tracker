@@ -3,7 +3,7 @@
     "background_color": "#008bcc",
     "display": "fullscreen",
     "scope": "/",
-    "start_url": "http://dev.greeninc.ga/coronatracker",
+    "start_url": "https://cct.greeninc.ga",
     "name": "Casumer Corona Tracker",
     "short_name": "CoronaTracker",
     "description": "Eine PWA zum Anzeigen der Coronazahlen im Altkreis Halle",

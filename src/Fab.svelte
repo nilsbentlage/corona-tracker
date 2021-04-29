@@ -23,12 +23,13 @@
 <style>
   :root {
     --button-size: 48px;
-    --half-button-size: calc(var(--button-size) / 2)
+    --half-button-size: calc(var(--button-size) / 2);
   }
   #fab {
     position: fixed;
     bottom: var(--half-button-size);
-    right: var(--half-button-size);
+    left: 50%;
+    transform: translateX(-50%);
     width: var(--button-size);
     height: var(--button-size);
     border-radius: 4rem;
@@ -40,9 +41,10 @@
     z-index: 4;
     margin: 0;
     padding: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
   #fab > img {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
   .center-all {
     display: grid;
@@ -57,17 +59,17 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    transform: translateX(100vw);
+    transform: translateY(100vh);
     transition: all ease-in-out 0.5s;
     z-index: 3;
     margin: 0;
     padding: 0;
   }
   #overlay.active {
-    transform: translateX(0);
+    transform: translateY(0);
   }
   #fab.active {
-    transform: translateX(calc(var(--button-size) * 3));
+    transform: translateY(calc(var(--button-size) * 3));
   }
   .close-button {
     background: #008bcc;
