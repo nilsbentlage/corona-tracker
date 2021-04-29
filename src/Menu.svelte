@@ -57,8 +57,8 @@
 
 <div class="menu">
   {#if districts}
-    <h2>Welchen Ort möchtest du hinzufügen?</h2>
     <div class="formular">
+      <h2>Welchen Ort möchtest du hinzufügen?</h2>
       <input
         list="districts"
         id="districtSearch"
@@ -88,12 +88,14 @@
     margin-top: 3rem;
   }
   .singleDistrict {
-    width: clamp(200px, 80vw, 500px);
+    width: clamp(200px, 90vw, 500px);
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 2rem;
+    font-size: 115%;
+    font-weight: 400;
   }
   .delete {
     background-color: red;
@@ -104,7 +106,7 @@
     text-align: left;
   }
   .menu {
-    padding: 4rem 0;
+    padding: 1em 0;
     color: white;
     min-height: 100%;
     display: flex;

@@ -16,17 +16,21 @@
   <img {src} alt="burger Icon" width="26px" height="26px" />
 </div>
 <div id="overlay" class="center-all {showMenu === true ? 'active' : ''}">
-  <Menu {data}/>
+  <Menu {data} />
   <div class="close-button" on:click={toggleMenu}>CLOSE</div>
 </div>
 
 <style>
+  :root {
+    --button-size: 48px;
+    --half-button-size: calc(var(--button-size) / 2)
+  }
   #fab {
     position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    width: 3rem;
-    height: 3rem;
+    bottom: var(--half-button-size);
+    right: var(--half-button-size);
+    width: var(--button-size);
+    height: var(--button-size);
     border-radius: 4rem;
     background: #008bcc;
     display: grid;
@@ -37,6 +41,9 @@
     margin: 0;
     padding: 0;
   }
+  #fab > img {
+    transform: scale(1.3);
+  }
   .center-all {
     display: grid;
     align-items: center;
@@ -45,7 +52,7 @@
   }
   #overlay {
     background-color: rgba(0, 0, 0, 0.95);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -60,20 +67,20 @@
     transform: translateX(0);
   }
   #fab.active {
-    transform: translateX(100px);
+    transform: translateX(calc(var(--button-size) * 3));
   }
   .close-button {
     background: #008bcc;
     padding: 4px 64px;
-    line-height: 3rem;
+    line-height: var(--half-button-size);
     margin: auto;
     text-align: center;
     color: white;
     position: absolute;
-    bottom: 1.5rem;
+    bottom: var(--button-size);
     left: 50%;
-    height: 3rem;
-    border-radius: 3rem;
-    transform: translateX(-50%);
+    height: var(--half-button-size);
+    border-radius: var(--button-size);
+    transform: translate(-50%, 50%);
   }
 </style>

@@ -188,7 +188,7 @@
     font-weight: 500;
     overflow: hidden;
     position: relative;
-    padding-bottom: 80px;
+    padding-bottom: 100px;
   }
   main * {
     z-index: 1;
