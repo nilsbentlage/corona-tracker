@@ -1,10 +1,16 @@
 <script>
   import Fab from "./Fab.svelte";
+  import { districtStore } from "./store.js";
+  let districts;
 
-  let districts = JSON.parse(localStorage.getItem("districts"));
-  if (!districts) {
+  districtStore.subscribe((value) => {
+    districts = value || ["05711", "05754", "03459"];
+  });
+
+  if (!districtStore) {
     districts = ["05711", "05754", "03459"];
   }
+
   let countryPromise = fetch("https://api.corona-zahlen.org/germany")
     .then((response) => response.json())
     .then((data) => data);
@@ -36,6 +42,7 @@
     let display = document.getElementById("time");
     startTimer(timeInSeconds, display);
   }
+  districts = districts;
 </script>
 
 <main>
@@ -226,7 +233,7 @@
     font-size: 80%;
   }
   .outputContainer {
-    width: 90vw;
+    width: clamp(300px, 90vw, 500px);
     margin: 0.5rem auto;
     padding: 0.5rem;
   }

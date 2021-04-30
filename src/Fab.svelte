@@ -29,7 +29,7 @@
     position: fixed;
     bottom: var(--half-button-size);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 0%);
     width: var(--button-size);
     height: var(--button-size);
     border-radius: 4rem;
@@ -42,9 +42,10 @@
     margin: 0;
     padding: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
   }
   #fab > img {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
   .center-all {
     display: grid;
@@ -69,13 +70,14 @@
     transform: translateY(0);
   }
   #fab.active {
-    transform: translateY(calc(var(--button-size) * 3));
+    transform: translate(-50%, calc(var(--button-size) * 3));
   }
   .close-button {
     background: #008bcc;
-    padding: 4px 64px;
+    padding: 6px 24px;
     line-height: var(--half-button-size);
     margin: auto;
+    cursor: pointer;
     text-align: center;
     color: white;
     position: absolute;

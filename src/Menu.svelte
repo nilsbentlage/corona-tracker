@@ -1,26 +1,29 @@
 <script>
   import { onMount } from "svelte";
+  import { districtStore } from "./store.js";
+  import { slide } from "svelte/transition";
 
   export let data;
   let allDistricts = data[1].data || null;
   let districts = JSON.parse(localStorage.getItem("districts")) || [
     "05711",
     "05754",
-    "03459" ];
+    "03459",
+  ];
   let districtNumbers = {};
   let osnaHack = "Osnabrück (Stadt)";
 
   onMount(async () => {
     for (const [key, value] of Object.entries(allDistricts)) {
+      // console.log(key, value)
       let newValue = value.name;
       key == "03404" ? (newValue = osnaHack) : (newValue = value.name);
-      Object.assign(districtNumbers, { [value.name]: key });
+      Object.assign(districtNumbers, { [newValue]: key });
       let option = document.createElement("OPTION");
       option.setAttribute("value", newValue);
       document.getElementById("districts").appendChild(option);
     }
   });
-
   function addDistrict() {
     let value = document.getElementById("districtSearch").value;
     let placeholder = document.getElementById("districtSearch");
@@ -29,15 +32,20 @@
       placeholder.value = "";
       placeholder.placeholder = text;
     }
+    console.log(value);
+    console.log(districtNumbers);
+
     if (value in districtNumbers) {
       if (districts.includes(districtNumbers[value])) {
         searchError("Diesem Kreis folgst du bereits!");
       } else {
         let pushValue = districtNumbers[value];
         districts.push(pushValue);
+        districts = districts;
+        districtStore.set(districts);
+
         localStorage.setItem("districts", JSON.stringify(districts));
         searchError("Hinzugefügt!");
-        location.reload();
       }
     } else {
       searchError("Diesen Landkreis gibt es nicht!");
@@ -46,16 +54,15 @@
 
   function resetDistricts() {
     localStorage.removeItem("districts");
-    location.reload();
+    districtStore.set(null);
+    districts = ["05711", "05754", "03459"];
   }
 
   function deleteDistrict(event) {
     let arrayKey = event.target.parentNode.dataset.key;
     districts = districts.filter((x) => x != arrayKey);
+    districtStore.set(districts);
     localStorage.setItem("districts", JSON.stringify(districts));
-    setTimeout(() => {
-      location.reload();
-    }, 300);
   }
 
   function truncateString(str, num) {
@@ -64,7 +71,6 @@
     }
     return str.slice(0, num) + " ...";
   }
-
 </script>
 
 <div class="menu">
@@ -78,17 +84,22 @@
         placeholder="Gib hier den Namen eines Landkreises ein ..."
       />
       <datalist id="districts" /><br />
-      <button on:click={addDistrict}>Hinzufügen</button>
+      <button class="add" on:click={addDistrict}>Hinzufügen</button>
     </div>
     <div class="districtList">
+      <h2 class="head">Meine Landkreise</h2>
       {#each districts as district}
-        <div class="singleDistrict" data-key={district}>
+        <div
+          class="singleDistrict"
+          data-key={district}
+          transition:slide={{ duration: 300 }}
+        >
           <span class="title"
             >{truncateString(
               district == "03404" ? osnaHack : allDistricts?.[district].name,
               25
             )}</span
-          ><span on:click={deleteDistrict} class="delete">Löschen</span>
+          ><button on:click={deleteDistrict} class="delete">Löschen</button>
         </div>
       {/each}
     </div>
@@ -97,17 +108,13 @@
 </div>
 
 <style>
-  .reset {
-    background: grey;
-    margin-top: 3rem;
-  }
   .singleDistrict {
     width: clamp(200px, 90vw, 500px);
     margin: auto;
+    margin-top: 2rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 2rem;
     font-size: 115%;
     font-weight: 400;
   }
@@ -115,11 +122,10 @@
     overflow-y: scroll;
     max-height: 100vh;
   }
-  .delete {
-    background-color: red;
-    padding: 2px 8px;
-    border-radius: 4px;
+  h2.head {
+    border-bottom: 1px solid white;
   }
+
   .title {
     text-align: left;
   }
@@ -136,21 +142,26 @@
     max-height: 100vh;
   }
   button {
-    margin-top: 1rem;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    font-size: 120%;
     border: none;
     outline: none;
     border-radius: 4px;
-    background-image: linear-gradient(
-      360deg,
-      rgb(40, 180, 52),
-      rgb(58, 255, 74)
-    );
     color: white;
-    padding: 4px 24px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .add {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 120%;
+    background: rgb(16, 175, 29);
+  }
+  .delete {
+    background-color: red;
+  }
+  .reset {
+    background: grey;
+    margin-top: 3rem;
   }
   #districtSearch {
     width: clamp(200px, 80vw, 500px);
