@@ -6,9 +6,7 @@
   let districts = JSON.parse(localStorage.getItem("districts")) || [
     "05711",
     "05754",
-    "03459",
-    "03404",
-  ];
+    "03459" ];
   let districtNumbers = {};
   let osnaHack = "Osnabrück (Stadt)";
 
