@@ -118,7 +118,7 @@
     text-align: center;
   }
     .singleDistrict {
-    width: clamp(200px, 90vw, 500px);
+    width: clamp(300px, 90vw, 500px);
     margin: auto;
     margin-bottom: 1rem;
     display: flex;
@@ -129,7 +129,8 @@
     font-weight: 400;
     background: #808080;
     border-radius: 4px;
-    padding-left: 8px;
+    padding-left: 12px;
+    box-sizing: border-box;
   }
   #error-box {
     color: red;

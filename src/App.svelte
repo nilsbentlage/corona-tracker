@@ -76,9 +76,19 @@
             <span class="addition">
               (+{data[0].delta.deaths.toLocaleString("de")})</span
             ><br />
-            <span class="value">{(data[0].cases - data[0].recovered - data[0].deaths).toLocaleString("de")}</span>
+            <span class="value"
+              >{(
+                data[0].cases -
+                data[0].recovered -
+                data[0].deaths
+              ).toLocaleString("de")}</span
+            >
             <span class="addition">
-              (+{(data[0].delta.cases - data[0].delta.recovered - data[0].delta.deaths).toLocaleString("de")})</span
+              (+{(
+                data[0].delta.cases -
+                data[0].delta.recovered -
+                data[0].delta.deaths
+              ).toLocaleString("de")})</span
             >
           </div>
         </div>
@@ -90,8 +100,10 @@
             style="animation-delay: {idx * 0.2 + 0.2}s"
           >
             <h3>
-              {data[1].data[district].name}
-              {#if data[1].data[district].ags == "03404"}(Stadt){/if}
+              <span class="city"
+                >{data[1].data[district].name}
+                {#if data[1].data[district].ags == "03404"}(Stadt){/if}</span
+              >
               <span class="addition">
                 ({data[1].data[district].population.toLocaleString("de")} Einwohner)
               </span>
@@ -101,8 +113,11 @@
                 <div class="title">Inzidenz</div>
                 <span
                   class="value"
-                  style="color: {data[1].data[district].weekIncidence >
-                  165 ? 'red': data[1].data[district].weekIncidence < 100 ? 'green': 'orange'}"
+                  style="color: {data[1].data[district].weekIncidence > 165
+                    ? 'red'
+                    : data[1].data[district].weekIncidence < 100
+                    ? 'green'
+                    : 'orange'}"
                 >
                   {data[1].data[district].weekIncidence.toFixed(2)}
                 </span>
@@ -133,18 +148,20 @@
           .slice(0, -8)}
       </div>
     {:else}
-  <div class="loading" on:load={errorMessage()}>
-    <div>
-      <h2>Error!</h2>
-      <div class="animation-frame">
-        <span id="time">30</span>
+      <div class="loading" on:load={errorMessage()}>
+        <div>
+          <h2>Error!</h2>
+          <div class="animation-frame">
+            <span id="time">30</span>
+          </div>
+          <p>
+            We could not read any Data from the RKI Corona API.<br />Maybe you
+            called it too often!?
+          </p>
+          You have to wait for 30 seconds.
+        </div>
       </div>
-      <p>We could not read any Data from the RKI Corona API.<br />Maybe you called it too often!?</p>
-      You have to wait for 30 seconds.
-
-    </div>
-  </div>
-  {/if}
+    {/if}
   {:catch error}
     <div>{error.message}</div>
   {/await}
@@ -196,7 +213,7 @@
     font-weight: 500;
     overflow: hidden;
     position: relative;
-    padding-bottom: 96px;
+    padding-bottom: 68px;
   }
   main * {
     z-index: 1;
@@ -246,7 +263,11 @@
   .outputContainer {
     width: clamp(300px, 90vw, 500px);
     margin: 0 auto;
-    padding: 0.3rem;
+    padding: 0.3rem 0;
+    text-align: left;
+  }
+  .city {
+    text-align: left;
   }
   .ger--parent {
     display: flex;
@@ -311,6 +332,6 @@
     animation-duration: 1s;
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
-    z-index: 5
+    z-index: 5;
   }
 </style>
