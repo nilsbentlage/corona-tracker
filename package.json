@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build and deploy": "rollup -c && node deploy.js",
+    "build, deploy & fetch": "rollup -c && node deploy.js && git fetch",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "build": "rollup -c"

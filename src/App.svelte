@@ -258,7 +258,8 @@
     font-size: 140%;
   }
   .addition {
-    font-size: 80%;
+    font-size: 80%; 
+    white-space: nowrap;
   }
   .outputContainer {
     width: clamp(300px, 90vw, 500px);
