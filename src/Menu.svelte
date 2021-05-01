@@ -91,38 +91,45 @@
       <div id="error-box" />
       <button class="add" on:click={addDistrict}>Hinzufügen</button>
     </div>
-    <h2 class="head">Meine Landkreise</h2>
-    <div class="districtList">
-      {#each districts as district}
-        <div
-          class="singleDistrict"
-          data-key={district}
-          transition:slide={{ duration: 300 }}
-        >
-          <span class="title"
-            >{truncateString(
-              district == "03404" ? osnaHack : allDistricts?.[district].name,
-              25
-            )}</span
-          ><button on:click={deleteDistrict} class="delete">Löschen</button>
-        </div>
-      {/each}
-    </div>
+    <div class="list-wrapper"><h2 class="head">Meine Landkreise</h2>
+      <div class="districtList">
+        {#each districts as district}
+          <div
+            class="singleDistrict"
+            data-key={district}
+            transition:slide={{ duration: 300 }}
+          >
+            <span class="title"
+              >{truncateString(
+                district == "03404" ? osnaHack : allDistricts?.[district].name,
+                25
+              )}</span
+            ><button on:click={deleteDistrict} class="delete">Löschen</button>
+          </div>
+        {/each}
+      </div></div>
 
-    <button class="reset" on:click={resetDistricts}>Alle zurücksetzen</button>
+    <button class="reset" on:click={resetDistricts}>Zurücksetzen</button>
   {/if}
 </div>
 
 <style>
-  .singleDistrict {
+  .list-wrapper {
+    text-align: center;
+  }
+    .singleDistrict {
     width: clamp(200px, 90vw, 500px);
     margin: auto;
-    margin-top: 2rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: baseline;
     font-size: 115%;
     font-weight: 400;
+    background: #808080;
+    border-radius: 4px;
+    padding-left: 8px;
   }
   #error-box {
     color: red;
@@ -133,10 +140,15 @@
   }
   .districtList {
     overflow-y: scroll;
-    max-height: 100vh;
+    max-height: 40vh;
+    margin-top: 1rem
   }
   h2.head {
     border-bottom: 1px solid white;
+    width: clamp(200px, 80vw, 500px);
+    margin: auto;
+    margin-top: 1rem
+
   }
 
   .title {
@@ -161,6 +173,8 @@
     color: white;
     padding: 6px 12px;
     cursor: pointer;
+    margin: 0;
+    font-size: 80%;
   }
 
   .add {
@@ -171,10 +185,11 @@
   }
   .delete {
     background-color: red;
+    border-radius: 0 4px 4px 0;
   }
   .reset {
     background: grey;
-    margin-top: 3rem;
+    margin-top: 1rem;
   }
   #districtSearch {
     width: clamp(200px, 80vw, 500px);
@@ -185,5 +200,6 @@
     border-bottom: 1px solid white;
     color: white;
     font-size: 130%;
+    text-align: center;
   }
 </style>

@@ -102,12 +102,7 @@
                 <span
                   class="value"
                   style="color: {data[1].data[district].weekIncidence >
-                  data[0].weekIncidence
-                    ? 'red'
-                    : data[1].data[district].weekIncidence <
-                      data[0].weekIncidence / 2
-                    ? 'green'
-                    : 'black'}"
+                  165 ? 'red': data[1].data[district].weekIncidence < 100 ? 'green': 'orange'}"
                 >
                   {data[1].data[district].weekIncidence.toFixed(2)}
                 </span>
@@ -225,7 +220,7 @@
     text-align: center;
     flex: 1;
     background-color: rgba(255, 255, 255, 0.8);
-    padding: 0.3rem;
+    padding: 0.2rem;
     margin: 0 2px;
     border-radius: 4px;
   }
@@ -240,7 +235,7 @@
   }
   .ger--child .title {
     text-align: right;
-    padding-right: 2rem;
+    padding-right: 1.2rem;
   }
   .display--child .value {
     font-size: 140%;
@@ -250,14 +245,13 @@
   }
   .outputContainer {
     width: clamp(300px, 90vw, 500px);
-    margin: 0.5rem auto;
-    padding: 0.5rem;
+    margin: 0 auto;
+    padding: 0.3rem;
   }
   .ger--parent {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    font-size: 120%;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
     padding: 8px;
@@ -317,5 +311,6 @@
     animation-duration: 1s;
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
+    z-index: 5
   }
 </style>
