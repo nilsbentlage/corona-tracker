@@ -12,6 +12,7 @@
   ];
   let districtNumbers = {};
   let osnaHack = "Osnabrück (Stadt)";
+  let isError = false;
 
   onMount(async () => {
     for (const [key, value] of Object.entries(allDistricts)) {
@@ -26,14 +27,17 @@
   });
   function addDistrict() {
     let value = document.getElementById("districtSearch").value;
-    let placeholder = document.getElementById("districtSearch");
+    let placeholder = document.getElementById("error-box");
 
     function searchError(text) {
       placeholder.value = "";
-      placeholder.placeholder = text;
+      placeholder.innerText = text;
+      isError = true;
+      setTimeout(() => {
+        placeholder.innerText = " ";
+        isError = false;
+      }, 5000);
     }
-    console.log(value);
-    console.log(districtNumbers);
 
     if (value in districtNumbers) {
       if (districts.includes(districtNumbers[value])) {
@@ -43,9 +47,7 @@
         districts.push(pushValue);
         districts = districts;
         districtStore.set(districts);
-
         localStorage.setItem("districts", JSON.stringify(districts));
-        searchError("Hinzugefügt!");
       }
     } else {
       searchError("Diesen Landkreis gibt es nicht!");
@@ -82,8 +84,10 @@
         id="districtSearch"
         name="districtSearch"
         placeholder="Gib hier den Namen eines Landkreises ein ..."
+        style="border-bottom: 1px solid {isError ? 'red' : 'white'}"
       />
-      <datalist id="districts" /><br />
+      <datalist id="districts" />
+      <div id="error-box" />
       <button class="add" on:click={addDistrict}>Hinzufügen</button>
     </div>
     <div class="districtList">
@@ -103,6 +107,7 @@
         </div>
       {/each}
     </div>
+
     <button class="reset" on:click={resetDistricts}>Alle zurücksetzen</button>
   {/if}
 </div>
@@ -117,6 +122,13 @@
     justify-content: space-between;
     font-size: 115%;
     font-weight: 400;
+  }
+  #error-box {
+    color: red;
+    font-size: 80%;
+    height: 0.3rem;
+    transform: translateY(-6px);
+    transition: all 0.5s;
   }
   .districtList {
     overflow-y: scroll;
@@ -165,5 +177,12 @@
   }
   #districtSearch {
     width: clamp(200px, 80vw, 500px);
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    outline: none;
+    font-size: 130%;
+    border-bottom: 1px solid white;
+    color: white;
+    font-size: 130%;
   }
 </style>

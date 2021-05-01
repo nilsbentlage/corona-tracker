@@ -42,7 +42,6 @@
     let display = document.getElementById("time");
     startTimer(timeInSeconds, display);
   }
-  districts = districts;
 </script>
 
 <main>
@@ -59,6 +58,7 @@
           <div class="ger--child">
             <span class="title">Inzidenz:</span>
             <span class="title">Fälle gesamt:</span>
+            <span class="title">Genesene:</span>
             <span class="title">Tote:</span>
           </div>
           <div class="ger--child">
@@ -66,6 +66,10 @@
             <span class="value">{data[0].cases.toLocaleString("de")}</span>
             <span class="addition">
               (+{data[0].delta.cases.toLocaleString("de")})</span
+            ><br />
+            <span class="value">{data[0].recovered.toLocaleString("de")}</span>
+            <span class="addition">
+              (+{data[0].delta.recovered.toLocaleString("de")})</span
             ><br />
             <span class="value">{data[0].deaths.toLocaleString("de")}</span>
             <span class="addition">
