@@ -60,6 +60,7 @@
             <span class="title">Fälle gesamt:</span>
             <span class="title">Genesene:</span>
             <span class="title">Tote:</span>
+            <span class="title">Aktive Fälle:</span>
           </div>
           <div class="ger--child">
             <span class="value">{data[0].weekIncidence.toFixed(2)}</span><br />
@@ -74,6 +75,10 @@
             <span class="value">{data[0].deaths.toLocaleString("de")}</span>
             <span class="addition">
               (+{data[0].delta.deaths.toLocaleString("de")})</span
+            ><br />
+            <span class="value">{(data[0].cases - data[0].recovered - data[0].deaths).toLocaleString("de")}</span>
+            <span class="addition">
+              (+{(data[0].delta.cases - data[0].delta.recovered - data[0].delta.deaths).toLocaleString("de")})</span
             >
           </div>
         </div>
@@ -230,6 +235,10 @@
   .title {
     display: block;
   }
+  .ger--child .title {
+    text-align: right;
+    padding-right: 2rem;
+  }
   .display--child .value {
     font-size: 140%;
   }
@@ -244,7 +253,7 @@
   .ger--parent {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     font-size: 120%;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
