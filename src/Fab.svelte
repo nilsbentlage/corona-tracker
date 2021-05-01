@@ -24,6 +24,8 @@
   :root {
     --button-size: 48px;
     --half-button-size: calc(var(--button-size) / 2);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
   #fab {
     position: fixed;
@@ -54,20 +56,22 @@
     height: 100vh;
   }
   #overlay {
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.9);
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     transform: translateY(100vh);
-    transition: all ease-in-out 0.5s;
+    transition: all ease-in-out 0.3s;
+    opacity: 0;
     z-index: 3;
     margin: 0;
     padding: 0;
   }
   #overlay.active {
     transform: translateY(0);
+    opacity: 1;
   }
   #fab.active {
     transform: translate(-50%, calc(var(--button-size) * 3));

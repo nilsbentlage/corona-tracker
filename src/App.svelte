@@ -38,7 +38,7 @@
   }
 
   function errorMessage() {
-    let timeInSeconds = 20;
+    let timeInSeconds = 30;
     let display = document.getElementById("time");
     startTimer(timeInSeconds, display);
   }
@@ -138,15 +138,18 @@
           .slice(0, -8)}
       </div>
     {:else}
-      <div class="loading" on:load={errorMessage()}>
-        <div>
-          <h2>Error!</h2>
-          Maybe you have called the API too often!?<br />
-          You have to wait 20 seconds ...
-          <span id="time">20</span>
-        </div>
+  <div class="loading" on:load={errorMessage()}>
+    <div>
+      <h2>Error!</h2>
+      <div class="animation-frame">
+        <span id="time">30</span>
       </div>
-    {/if}
+      <p>We could not read any Data from the RKI Corona API.<br />Maybe you called it too often!?</p>
+      You have to wait for 30 seconds.
+
+    </div>
+  </div>
+  {/if}
   {:catch error}
     <div>{error.message}</div>
   {/await}
@@ -260,8 +263,10 @@
     padding: 8px;
   }
   .loading {
-    width: 90vw;
+    width: clamp(300px, 90vw, 500px);
     margin: auto;
+    padding: 1rem;
+    box-sizing: border-box;
     text-align: center;
     background: rgba(255, 0, 0, 0.5);
     border: 1px solid rgb(255, 0, 0);
@@ -274,6 +279,17 @@
     opacity: 0;
     animation: fadeIn ease-in-out 0.5s forwards;
   }
+  .animation-frame {
+    margin: 2rem auto;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-image: url("../img/tail-spin.svg");
+    background-size: cover;
+    transform: scaleX(-1);
+  }
   .fade-in {
     opacity: 0;
     transform: rotateX(90deg);
@@ -284,7 +300,7 @@
   #time {
     display: block;
     font-size: 200%;
-    margin: 3rem 0;
+    transform: scaleX(-1);
   }
   .update-hint {
     position: fixed;

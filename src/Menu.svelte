@@ -48,6 +48,7 @@
         districts = districts;
         districtStore.set(districts);
         localStorage.setItem("districts", JSON.stringify(districts));
+        document.getElementById("districtSearch").value = "";
       }
     } else {
       searchError("Diesen Landkreis gibt es nicht!");
@@ -83,15 +84,15 @@
         list="districts"
         id="districtSearch"
         name="districtSearch"
-        placeholder="Gib hier den Namen eines Landkreises ein ..."
+        placeholder="Landkreis suchen"
         style="border-bottom: 1px solid {isError ? 'red' : 'white'}"
       />
       <datalist id="districts" />
       <div id="error-box" />
       <button class="add" on:click={addDistrict}>Hinzufügen</button>
     </div>
+    <h2 class="head">Meine Landkreise</h2>
     <div class="districtList">
-      <h2 class="head">Meine Landkreise</h2>
       {#each districts as district}
         <div
           class="singleDistrict"
