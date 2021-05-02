@@ -91,7 +91,8 @@
       <div id="error-box" />
       <button class="add" on:click={addDistrict}>Hinzufügen</button>
     </div>
-    <div class="list-wrapper"><h2 class="head">Meine Landkreise</h2>
+    <div class="list-wrapper">
+      <h2 class="head">Meine Landkreise</h2>
       <div class="districtList">
         {#each districts as district}
           <div
@@ -104,10 +105,11 @@
                 district == "03404" ? osnaHack : allDistricts?.[district].name,
                 25
               )}</span
-            ><button on:click={deleteDistrict} class="delete">×</button>
+            ><button on:click={deleteDistrict} class="delete" />
           </div>
         {/each}
-      </div></div>
+      </div>
+    </div>
 
     <button class="reset" on:click={resetDistricts}>Zurücksetzen</button>
   {/if}
@@ -117,13 +119,13 @@
   .list-wrapper {
     text-align: center;
   }
-    .singleDistrict {
+  .singleDistrict {
     margin: 0;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     font-size: 115%;
     font-weight: 400;
     background: #444;
@@ -142,14 +144,13 @@
   .districtList {
     overflow-y: scroll;
     max-height: 40vh;
-    margin-top: 1rem
+    margin-top: 1rem;
   }
   h2.head {
     border-bottom: 1px solid white;
     width: clamp(200px, 90vw, 500px);
     margin: auto;
-    margin-top: 1rem
-
+    margin-top: 1rem;
   }
 
   .title {
@@ -185,11 +186,15 @@
     background: rgb(16, 175, 29);
   }
   .delete {
-    background-color: red;
+    background-color: white;
     border-radius: 0 4px 4px 0;
-    padding: 0px 10px 4px;
-    font-size: 140%;
-      }
+    width: 48px;
+    height: 48px;
+    background-image: url("../img/trash.svg");
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
   .reset {
     background: #444;
     margin-top: 1rem;

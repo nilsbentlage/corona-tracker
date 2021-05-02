@@ -17,7 +17,7 @@
 </div>
 <div id="overlay" class="center-all {showMenu === true ? 'active' : ''}">
   <Menu {data} />
-  <div class="close-button" on:click={toggleMenu}>CLOSE</div>
+  <div class="close-button" on:click={toggleMenu}>FERTIG</div>
 </div>
 
 <style>
