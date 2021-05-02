@@ -104,7 +104,7 @@
                 district == "03404" ? osnaHack : allDistricts?.[district].name,
                 25
               )}</span
-            ><button on:click={deleteDistrict} class="delete">Löschen</button>
+            ><button on:click={deleteDistrict} class="delete">×</button>
           </div>
         {/each}
       </div></div>
@@ -118,8 +118,7 @@
     text-align: center;
   }
     .singleDistrict {
-    width: clamp(300px, 90vw, 500px);
-    margin: auto;
+    margin: 0;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
@@ -127,8 +126,9 @@
     align-items: baseline;
     font-size: 115%;
     font-weight: 400;
-    background: #808080;
+    background: #444;
     border-radius: 4px;
+    padding: 0;
     padding-left: 12px;
     box-sizing: border-box;
   }
@@ -146,7 +146,7 @@
   }
   h2.head {
     border-bottom: 1px solid white;
-    width: clamp(200px, 80vw, 500px);
+    width: clamp(200px, 90vw, 500px);
     margin: auto;
     margin-top: 1rem
 
@@ -187,13 +187,15 @@
   .delete {
     background-color: red;
     border-radius: 0 4px 4px 0;
-  }
+    padding: 0px 10px 4px;
+    font-size: 140%;
+      }
   .reset {
-    background: grey;
+    background: #444;
     margin-top: 1rem;
   }
   #districtSearch {
-    width: clamp(200px, 80vw, 500px);
+    width: clamp(200px, 90vw, 500px);
     background-color: rgba(0, 0, 0, 0);
     border: none;
     outline: none;
