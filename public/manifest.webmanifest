@@ -1,12 +1,14 @@
 {
     "theme_color": "#008bcc",
     "background_color": "#008bcc",
-    "display": "fullscreen",
+    "display": "standalone",
     "scope": "/",
     "start_url": "https://cct.greeninc.ga",
     "name": "Casumer Corona Tracker",
     "short_name": "CoronaTracker",
     "description": "Eine PWA zum Anzeigen der Coronazahlen in Deutschland und frei konfigurierbaren Landkreisen",
+    "orientation": "portrait",
+    "lang": "de",
     "icons": [
         {
             "src": "icon-192x192.png",
