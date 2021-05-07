@@ -1,7 +1,7 @@
 {
     "theme_color": "#008bcc",
     "background_color": "#008bcc",
-    "display": "standalone",
+    "display": "fullscreen",
     "scope": "/",
     "start_url": "https://cct.greeninc.ga",
     "name": "Casumer Corona Tracker",
