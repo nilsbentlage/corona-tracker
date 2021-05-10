@@ -67,13 +67,6 @@
     districtStore.set(districts);
     localStorage.setItem("districts", JSON.stringify(districts));
   }
-
-  function truncateString(str, num) {
-    if (str.length <= num) {
-      return str;
-    }
-    return str.slice(0, num) + " ...";
-  }
 </script>
 
 <div class="menu">
@@ -84,6 +77,7 @@
         list="districts"
         id="districtSearch"
         name="districtSearch"
+        autocomplete="on"
         placeholder="Landkreis suchen"
         style="border-bottom: 1px solid {isError ? 'red' : 'white'}"
       />
@@ -101,10 +95,9 @@
             transition:slide={{ duration: 300 }}
           >
             <span class="title"
-              >{truncateString(
-                district == "03404" ? osnaHack : allDistricts?.[district].name,
-                25
-              )}</span
+              >{district == "03404"
+                ? osnaHack
+                : allDistricts?.[district].name}</span
             ><button on:click={deleteDistrict} class="delete" />
           </div>
         {/each}
@@ -133,6 +126,7 @@
     padding: 0;
     padding-left: 12px;
     box-sizing: border-box;
+    max-width: 90vw;
   }
   #error-box {
     color: red;
@@ -155,6 +149,10 @@
 
   .title {
     text-align: left;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .menu {
     padding: 1em 0 5em;
@@ -194,6 +192,7 @@
     background-size: 60%;
     background-position: center;
     background-repeat: no-repeat;
+    flex: 0 0 48px;
   }
   .reset {
     background: #444;
