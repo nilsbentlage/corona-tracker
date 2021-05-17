@@ -206,7 +206,7 @@
     min-height: 100%;
     padding-top: 20px;
     box-sizing: border-box;
-    background-image: linear-gradient(360deg, rgb(25, 28, 77), #008bcc);
+    background: #222;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -223,10 +223,12 @@
     width: 100vw;
     height: 100%;
     top: 0;
-    background-image: url("../img/bg.jpg");
-    background-size: cover;
+    background-image: url("../img/virus.png");
+    background-size: contain;
     background-position: center;
-    opacity: 0.2;
+    background-repeat: no-repeat;
+    transform: translate(50%, -40vw);
+    opacity: .5;
   }
   .display--parent {
     display: flex;

@@ -128,6 +128,9 @@
     box-sizing: border-box;
     max-width: 90vw;
   }
+  .singleDistrict:first-child {
+    margin-top: 20px;
+  }
   #error-box {
     color: red;
     font-size: 80%;
@@ -136,9 +139,10 @@
     transition: all 0.5s;
   }
   .districtList {
+    --custom-height: clamp(150px, 35vh, 350px);
     overflow-y: scroll;
-    max-height: 40vh;
-    margin-top: 1rem;
+    max-height: var(--custom-height);
+    -webkit-mask-box-image: linear-gradient(180deg, transparent, black 20px, black calc(var(--custom-height) - 20px), transparent var(--custom-height));
   }
   h2.head {
     border-bottom: 1px solid white;
