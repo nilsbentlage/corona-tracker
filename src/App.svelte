@@ -214,7 +214,7 @@
       transform: translateY(0%);
     }
     to {
-      transform: translateY(-120%);
+      transform: translateY(-125%);
     }
   }
   h1 {
@@ -367,8 +367,7 @@
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
     z-index: 5;
-    margin: .4rem;
-    border-radius: .2rem;
+    margin: 0.5rem;
     overflow: hidden;
     box-sizing: border-box;
   }
