@@ -16,7 +16,6 @@
 
   onMount(async () => {
     for (const [key, value] of Object.entries(allDistricts)) {
-      // console.log(key, value)
       let newValue = value.name;
       key == "03404" ? (newValue = osnaHack) : (newValue = value.name);
       Object.assign(districtNumbers, { [newValue]: key });

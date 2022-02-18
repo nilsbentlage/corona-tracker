@@ -3,6 +3,19 @@
   import { districtStore } from "./store.js";
   let districts;
 
+  let now = new Date();
+  let sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();
+
+  let dataCache = JSON.parse(localStorage.getItem("dataCache")) || {
+    timestamp: 0,
+    data: [],
+  };
+
+  function deleteCache() {
+    localStorage.removeItem("dataCache");
+    location.reload();
+  }
+
   districtStore.subscribe((value) => {
     districts = value || ["05711", "05754", "03459"];
   });
@@ -11,18 +24,35 @@
     districts = ["05711", "05754", "03459"];
   }
 
-  let countryPromise = fetch("https://api.corona-zahlen.org/germany")
-    .then((response) => response.json())
-    .then((data) => data);
+  let countryPromise = fetch("https://api.corona-zahlen.org/germany").then(
+    (response) => {
+      return response.json();
+    }
+  );
 
-  let districtPromise = fetch(
-    "https://api.corona-zahlen.org/districts"
-  ).then((response) => response.json());
+  let districtPromise = fetch("https://api.corona-zahlen.org/districts").then(
+    (response) => {
+      return response.json();
+    }
+  );
 
-  let bothPromises = Promise.all([
-    countryPromise,
-    districtPromise,
-  ]).catch((error) => console.log(error));
+  let bothPromises;
+
+  if (dataCache.timestamp > sixHoursAgo) {
+    bothPromises = [dataCache.data[0], dataCache.data[1]];
+  } else {
+    bothPromises = Promise.all([countryPromise, districtPromise])
+      .then(([country, districts]) => {
+        let data = {
+          timestamp: new Date(),
+          data: [country, districts],
+        };
+        localStorage.setItem("dataCache", JSON.stringify(data));
+        dataCache = data;
+        return [country, districts];
+      })
+      .catch((error) => console.log(error));
+  }
 
   function startTimer(duration, display) {
     let i = duration;
@@ -48,7 +78,7 @@
   <div class="bg-image" />
   <h1><small>Casumer</small><br />Corona Tracker</h1>
   {#await bothPromises}
-    <h2>Loading ...</h2>
+    <h1>Loading ...</h1>
   {:then data}
     {#if !data[0].error && !data[1].error}
       <Fab {data} />
@@ -143,9 +173,10 @@
         {/each}
       </div>
       <div class="update-hint">
-        RKI-Daten Timestamp: {data[0].meta.lastUpdate
-          .replace("T", " | ")
-          .slice(0, -8)}
+        Zuletzt aktualisiert: {new Date(dataCache.timestamp).toLocaleString(
+          "de-DE"
+        )}
+        <div class="update-button" on:click={deleteCache}>Update</div>
       </div>
     {:else}
       <div class="loading" on:load={errorMessage()}>
@@ -155,8 +186,8 @@
             <span id="time">30</span>
           </div>
           <p>
-            We could not read any Data from the RKI Corona API.<br />Maybe you
-            called it too often!?
+            We could not read any Data from the RKI Corona API.<br />
+            Maybe you called it too often!?
           </p>
           You have to wait for 30 seconds.
         </div>
@@ -183,7 +214,7 @@
       transform: translateY(0%);
     }
     to {
-      transform: translateY(-110%);
+      transform: translateY(-120%);
     }
   }
   h1 {
@@ -228,7 +259,7 @@
     background-position: center;
     background-repeat: no-repeat;
     transform: translate(50%, -40vw);
-    opacity: .5;
+    opacity: 0.5;
   }
   .display--parent {
     display: flex;
@@ -260,7 +291,7 @@
     font-size: 140%;
   }
   .addition {
-    font-size: 80%; 
+    font-size: 80%;
     white-space: nowrap;
   }
   .outputContainer {
@@ -326,15 +357,26 @@
     left: 0;
     right: 0;
     display: block;
-    background: white;
+    background: #ffffff;
     font-size: 80%;
     text-align: center;
-    padding: 0.3rem;
+    padding: 0.5rem;
     animation-name: slideOut;
     animation-delay: 10s;
     animation-duration: 1s;
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
     z-index: 5;
+    margin: .4rem;
+    border-radius: .2rem;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .update-button {
+    float: right;
+    background-color: grey;
+    color: white;
+    padding: 0.5rem;
+    margin: -0.5rem;
   }
 </style>
