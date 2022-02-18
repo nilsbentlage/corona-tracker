@@ -82,7 +82,7 @@
       />
       <datalist id="districts" />
       <div id="error-box" />
-      <button class="add" on:click={addDistrict}>Hinzufügen</button>
+      <button class="add" on:click={addDistrict} aria-label="Add District">Hinzufügen</button>
     </div>
     <div class="list-wrapper">
       <h2 class="head">Meine Landkreise</h2>
@@ -97,7 +97,7 @@
               >{district == "03404"
                 ? osnaHack
                 : allDistricts?.[district].name}</span
-            ><button on:click={deleteDistrict} class="delete" />
+            ><button on:click={deleteDistrict} class="delete" aria-label="Delete District"/>
           </div>
         {/each}
       </div>
