@@ -74,7 +74,7 @@
   }
   #fab.active {
     /* transform: translate(-50%, calc(var(--button-size) * 3)); */
-    animation: slideOut 0.3s ease-in-out forwards;
+    animation: slideOut 0.6s ease-in-out forwards;
   }
   .center-all {
     display: grid;
@@ -95,10 +95,12 @@
     z-index: 3;
     margin: 0;
     padding: 0;
+    transition-delay:0s;
   }
   #overlay.active {
     transform: translateY(0);
     opacity: 1;
+    transition-delay:0.5s;
   }
 
   .close-button {

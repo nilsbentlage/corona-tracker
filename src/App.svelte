@@ -214,7 +214,7 @@
       transform: translateY(0%);
     }
     to {
-      transform: translateY(-125%);
+      transform: translateY(calc((100% + 1rem) * -1));
     }
   }
   h1 {
@@ -362,9 +362,9 @@
     text-align: center;
     padding: 0.5rem;
     animation-name: slideOut;
-    animation-delay: 10s;
-    animation-duration: 1s;
-    animation-timing-function: ease-out;
+    animation-delay: 3s;
+    animation-duration: .6s;
+    animation-timing-function: cubic-bezier(.38,-0.45,1,.42);
     animation-fill-mode: forwards;
     z-index: 5;
     margin: 0.5rem;
