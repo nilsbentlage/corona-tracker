@@ -100,7 +100,7 @@
   #overlay.active {
     transform: translateY(0);
     opacity: 1;
-    transition-delay:0.5s;
+    transition-delay:0.3s;
   }
 
   .close-button {
