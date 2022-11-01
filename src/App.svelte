@@ -143,9 +143,11 @@
                 <div class="title">Inzidenz</div>
                 <span
                   class="value"
-                  style="color: {data[1].data[district].weekIncidence > 165
+                  style="color: {data[1].data[district].weekIncidence >
+                  data[0].weekIncidence.toFixed(2) * 1.25
                     ? 'red'
-                    : data[1].data[district].weekIncidence < 100
+                    : data[1].data[district].weekIncidence <
+                      data[0].weekIncidence.toFixed(2) * 0.75
                     ? 'green'
                     : 'orange'}"
                 >
@@ -363,8 +365,8 @@
     padding: 0.5rem;
     animation-name: slideOut;
     animation-delay: 3s;
-    animation-duration: .6s;
-    animation-timing-function: cubic-bezier(.38,-0.45,1,.42);
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0.38, -0.45, 1, 0.42);
     animation-fill-mode: forwards;
     z-index: 5;
     margin: 0.5rem;
